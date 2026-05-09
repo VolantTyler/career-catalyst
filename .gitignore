@@ -1,0 +1,52 @@
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore virtual environments
+env/
+venv/
+ENV/
+.venv/
+
+# Ignore macOS and Linux system files
+.DS_Store
+Thumbs.db
+
+# Ignore editor files
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+.idea/
+.vscode/
+
+# Ignore log files
+*.log
+
+# Ignore node modules
+node_modules/
+
+# Ignore build outputs
+dist/
+build/
+*.egg-info/
+
+# Ignore local env files
+.env
+.env.local
+.env.*.local
+!.env.example
+*.secret
+
+# Others
+*.bak
+*.tmp
+
+# Career Catalyst SDK state (SQLite)
+data/*.sqlite
+data/*.db
+
+# Personal documents (CV, resumes, cover letters)
+context/
+

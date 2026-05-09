@@ -1,0 +1,26 @@
+{
+  "name": "career-catalyst",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Career Catalyst research agent — Cursor Agents SDK integration",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "sdk:whoami": "tsx src/scripts/whoami.ts",
+    "sdk:prompt": "tsx src/scripts/prompt-once.ts",
+    "sdk:send": "tsx src/scripts/send.ts"
+  },
+  "dependencies": {
+    "@cursor/sdk": "^1.0.12",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
