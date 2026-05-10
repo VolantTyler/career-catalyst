@@ -30,3 +30,4 @@ Career Catalyst is a TypeScript CLI research agent built on `@cursor/sdk`. It ha
 - All scripts load `.env` from the project root via `dotenv`. Copy `.env.example` to `.env` and set `CURSOR_API_KEY`.
 - The `@cursor/sdk` package has native dependencies (via `better-sqlite3` transitive dep) — `npm install` handles compilation automatically.
 - The cloud agent's auto-injected `CURSOR_API_KEY` does **not** authenticate against the SDK's public API (`/v1/me`, `/v1/models`, agent operations). A user-provisioned key from the Cursor Cloud Agents dashboard is required for `sdk:whoami`, `sdk:prompt`, and `sdk:send` to succeed. Add it as a repo-scoped secret named `CURSOR_API_KEY`.
+- **Key precedence gotcha:** `dotenv` does not override existing env vars. If the cloud agent framework injects its own `CURSOR_API_KEY` into the shell, the `.env` value is ignored. Run `unset CURSOR_API_KEY` before SDK scripts so the user-provisioned key from `.env` takes effect.
