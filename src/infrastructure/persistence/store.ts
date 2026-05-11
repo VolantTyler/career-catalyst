@@ -3,6 +3,20 @@ import type { CatalystConfig } from "../../config/env.js";
 
 export type CatalystRuntime = "local" | "cloud";
 
+export interface DiscoveredEventRecord {
+  id: number;
+  runId: string;
+  searchWindowStart: string;
+  searchWindowEnd: string;
+  name: string;
+  registrationLink: string;
+  eventDate: string;
+  description: string;
+  location: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface CatalystStore {
   readonly db: DatabaseSync;
   recordAgentSession(input: {
@@ -21,6 +35,17 @@ export interface CatalystStore {
     promptPreview: string;
     resultPreview: string | null;
   }): void;
+  recordDiscoveredEvent(input: {
+    runId: string;
+    searchWindowStart: string;
+    searchWindowEnd: string;
+    name: string;
+    registrationLink: string;
+    eventDate: string;
+    description: string;
+    location: string;
+  }): void;
+  listDiscoveredEvents(limit?: number): DiscoveredEventRecord[];
   getSession(agentId: string):
     | {
         agentId: string;
@@ -59,6 +84,26 @@ function migrate(db: DatabaseSync): void {
 
     CREATE INDEX IF NOT EXISTS idx_sdk_runs_agent ON sdk_runs(agent_id);
     CREATE INDEX IF NOT EXISTS idx_sdk_runs_created ON sdk_runs(created_at);
+
+    CREATE TABLE IF NOT EXISTS discovered_events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      run_id TEXT NOT NULL,
+      search_window_start TEXT NOT NULL,
+      search_window_end TEXT NOT NULL,
+      name TEXT NOT NULL,
+      registration_link TEXT NOT NULL,
+      event_date TEXT NOT NULL,
+      description TEXT NOT NULL,
+      location TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      UNIQUE(name, event_date, registration_link)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_discovered_events_run_id
+      ON discovered_events(run_id);
+    CREATE INDEX IF NOT EXISTS idx_discovered_events_event_date
+      ON discovered_events(event_date);
   `);
 }
 
@@ -81,6 +126,46 @@ export function openCatalystStore(config: CatalystConfig): CatalystStore {
   const insertRun = db.prepare(`
     INSERT INTO sdk_runs (run_id, agent_id, status, duration_ms, prompt_preview, result_preview, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const upsertDiscoveredEvent = db.prepare(`
+    INSERT INTO discovered_events (
+      run_id,
+      search_window_start,
+      search_window_end,
+      name,
+      registration_link,
+      event_date,
+      description,
+      location,
+      created_at,
+      updated_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT(name, event_date, registration_link) DO UPDATE SET
+      run_id = excluded.run_id,
+      search_window_start = excluded.search_window_start,
+      search_window_end = excluded.search_window_end,
+      description = excluded.description,
+      location = excluded.location,
+      updated_at = excluded.updated_at
+  `);
+
+  const selectDiscoveredEvents = db.prepare(`
+    SELECT
+      id,
+      run_id,
+      search_window_start,
+      search_window_end,
+      name,
+      registration_link,
+      event_date,
+      description,
+      location,
+      created_at,
+      updated_at
+    FROM discovered_events
+    ORDER BY event_date ASC, id ASC
+    LIMIT ?
   `);
 
   const selectSession = db.prepare(`
@@ -114,6 +199,49 @@ export function openCatalystStore(config: CatalystConfig): CatalystStore {
         input.resultPreview,
         now
       );
+    },
+    recordDiscoveredEvent(input) {
+      const now = Math.floor(Date.now() / 1000);
+      upsertDiscoveredEvent.run(
+        input.runId,
+        input.searchWindowStart,
+        input.searchWindowEnd,
+        input.name,
+        input.registrationLink,
+        input.eventDate,
+        input.description,
+        input.location,
+        now,
+        now
+      );
+    },
+    listDiscoveredEvents(limit = 100) {
+      const rows = selectDiscoveredEvents.all(limit) as Array<{
+        id: number;
+        run_id: string;
+        search_window_start: string;
+        search_window_end: string;
+        name: string;
+        registration_link: string;
+        event_date: string;
+        description: string;
+        location: string;
+        created_at: number;
+        updated_at: number;
+      }>;
+      return rows.map((row) => ({
+        id: row.id,
+        runId: row.run_id,
+        searchWindowStart: row.search_window_start,
+        searchWindowEnd: row.search_window_end,
+        name: row.name,
+        registrationLink: row.registration_link,
+        eventDate: row.event_date,
+        description: row.description,
+        location: row.location,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at,
+      }));
     },
     getSession(agentId) {
       const row = selectSession.get(agentId) as

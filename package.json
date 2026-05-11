@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "sdk:whoami": "tsx src/scripts/whoami.ts",
     "sdk:prompt": "tsx src/scripts/prompt-once.ts",
-    "sdk:send": "tsx src/scripts/send.ts"
+    "sdk:send": "tsx src/scripts/send.ts",
+    "events:discover": "tsx src/scripts/discover-events.ts"
   },
   "dependencies": {
     "@cursor/sdk": "^1.0.12",

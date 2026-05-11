@@ -21,12 +21,14 @@ Career Catalyst is a TypeScript CLI research agent built on `@cursor/sdk`. It ha
 | Verify API key + list models | `npm run sdk:whoami` |
 | One-shot agent prompt | `npm run sdk:prompt` |
 | Multi-turn agent send | `npm run sdk:send` |
+| Discover upcoming NYC/NJ AI events + persist to SQLite | `npm run events:discover` |
 
 ### Non-obvious notes
 
 - There is no ESLint or dedicated linter configured; `npm run typecheck` (`tsc --noEmit`) is the only static analysis step.
 - The `node:sqlite` module emits an `ExperimentalWarning` on Node 22 — this is expected and not an error.
 - SQLite database is auto-created at `data/catalyst-sdk.sqlite` on first run; no migrations needed.
+- `npm run events:discover` asks the agent to research the next 6 weeks of NYC/NJ AI-related events and persists them in a `discovered_events` table with event name, registration link, date, description, and location.
 - All scripts load `.env` from the project root via `dotenv`. Copy `.env.example` to `.env` and set `CURSOR_API_KEY`.
 - The `@cursor/sdk` package has native dependencies (via `better-sqlite3` transitive dep) — `npm install` handles compilation automatically.
 - The cloud agent's auto-injected `CURSOR_API_KEY` does **not** authenticate against the SDK's public API (`/v1/me`, `/v1/models`, agent operations). A user-provisioned key from the Cursor Cloud Agents dashboard is required for `sdk:whoami`, `sdk:prompt`, and `sdk:send` to succeed. Add it as a repo-scoped secret named `CURSOR_API_KEY`.
