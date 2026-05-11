@@ -13,7 +13,11 @@ export {
   resolveModelSelection,
   invalidateModelCache,
 } from "./infrastructure/model-registry.js";
-export { openCatalystStore, type CatalystStore } from "./infrastructure/persistence/store.js";
+export {
+  openCatalystStore,
+  type CatalystStore,
+  type DiscoveredEventRecord,
+} from "./infrastructure/persistence/store.js";
 export { recordRunResult, previewText } from "./infrastructure/run-recorder.js";
 export {
   withCareerCatalystAgent,

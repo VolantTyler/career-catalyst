@@ -33,6 +33,7 @@ Career Catalyst is a **CLI-only** TypeScript project: npm scripts call `@cursor/
 | Verify API key + models + config summary | `npm run sdk:whoami` |
 | One-shot agent (`Agent.prompt`) | `npm run sdk:prompt -- <prompt text>` |
 | Multi-turn agent (`create` / `resume` + stream) | `npm run sdk:send -- <prompt text>` |
+| Discover upcoming NYC/NJ AI events and persist them | `npm run events:discover` |
 
 ---
 
@@ -85,6 +86,7 @@ There is **no separate feature-flag service**. Behavior is controlled by **envir
 | **`sdk:whoami`** | Fast check: key works, `Cursor.me`, model list (cached), config echo. No agent run. |
 | **`sdk:prompt`** | End-to-end **`Agent.prompt`**: writes run row to SQLite via `run-recorder`. Exit `2` if run status is `error`. |
 | **`sdk:send`** | **`withCareerCatalystAgent`**: creates agent, streams assistant text, persists session + run. Set **`CAREER_CATALYST_RESUME_AGENT=<id>`** to resume a stored session (ids appear in script output / DB). |
+| **`events:discover`** | End-to-end **`Agent.prompt`** specialized for the next 6 weeks of NYC/NJ AI events; validates strict JSON output and upserts rows into `discovered_events`. |
 
 ### Agent wiring (`src/infrastructure/agent-factory.ts`, `with-agent.ts`)
 
@@ -105,7 +107,7 @@ There is **no separate feature-flag service**. Behavior is controlled by **envir
 | Workflow | Steps |
 |----------|--------|
 | **Database creation** | After first agent script run, confirm `${CAREER_CATALYST_DATA_DIR:-data}/${CAREER_CATALYST_DB_NAME:-catalyst-sdk.sqlite}` exists. |
-| **Inspect tables** | `sqlite3 <path> '.tables'` — expect `sdk_agent_sessions`, `sdk_runs`. |
+| **Inspect tables** | `sqlite3 <path> '.tables'` — expect `sdk_agent_sessions`, `sdk_runs`, `discovered_events`. |
 
 ### Run logging (`src/infrastructure/run-recorder.ts`)
 
