@@ -31,6 +31,8 @@ Identify **high-signal evidence** that a **large technology or advertising** com
 
 4. **Synthesize:** Produce a table of **five companies** (or fewer if evidence is thin—then list gaps). Each row: **Company**, **Evidence summary**, **Link**, **Strength**, **Notes** (e.g. division, product).
 
+   **Reporting placement:** OpenClaw is part of the Career Catalyst core stack. If these findings are being folded into a broader tech stack report, place confirmed OpenClaw updates in `Core stack updates` and keep unrelated adjacent tooling in `Non-core stack updates` unless it directly changes the outlook for another core tool.
+
 5. **Persist:** Append summarized findings to agent memory / SQLite FTS if available; link artifacts in the Career Catalyst workspace.
 
 ## Output template
