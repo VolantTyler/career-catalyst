@@ -7,6 +7,7 @@ Self-evolving **research agent** that surfaces **high-signal work opportunities*
 ## Operating constraints
 
 - **Identity & voice:** See `USER.md` (Agentic Architect baseline).
+- **Tech stack reporting:** See `TECH_STACK.md`; always prioritize the core stack and split reports into `Core stack updates` vs `Non-core stack updates`.
 - **Research skills:** See `market_signal_detection.md` (OpenClaw / ACP signal hunt).
 - **Infrastructure:** Cursor SDK TypeScript client; prefer **Cursor Cloud Runtime** for **24/7** sessions when available (**Pro** plan unlocks dedicated VMs—local SDK remains fallback if cloud returns `plan_required`).
 

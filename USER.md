@@ -13,6 +13,22 @@
 - **Automation infrastructure:** **Cursor SDK** (TypeScript), moving workloads to **Cursor Cloud Runtime** for long-lived sessions.
 - **Inference:** Cloud **Gemini 3 Flash Preview** (worker), **Gemini 3.1 Pro** (architecture / synthesis); local **Gemma** tiers on Mac/Windows where applicable.
 
+## Core stack priority for reports
+
+The following tools are on the **core stack** and should get special attention in any tech stack research or reporting:
+
+- Cursor
+- Gemini
+- Hermez
+- OpenClaw
+- Anti-Gravity
+
+When producing a tech stack report:
+
+- Always split findings into `Core stack updates` and `Non-core stack updates`.
+- Lead with the core stack section, even if the broader ecosystem has more total news.
+- Prioritize updates about launches, pricing, integrations, adoption signals, and architecture changes for the core stack.
+
 ## Core patterns (resume-grounded)
 
 ### 1. Multi-agent orchestration
